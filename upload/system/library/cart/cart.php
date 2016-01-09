@@ -168,14 +168,15 @@ class Cart {
 				// Product Discounts
 				$discount_quantity = 0;
 
-				$cart_2_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "cart WHERE customer_id = '" . (int)$this->customer->getId() . "' AND session_id = '" . $this->db->escape($this->session->getId()) . "'");
+				//$cart_2_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "cart WHERE customer_id = '" . (int)$this->customer->getId() . "' AND session_id = '" . $this->db->escape($this->session->getId()) . "'");
 
-				foreach ($cart_2_query->rows as $cart_2) {
-					if ($cart_2['product_id'] == $cart['product_id']) {
-						$discount_quantity += $cart_2['quantity'];
-					}
-				}
-
+				// foreach ($cart_2_query->rows as $cart_2) {
+				// 	if ($cart_2['product_id'] == $cart['product_id']) {
+				// 		$discount_quantity += $cart_2['quantity'];
+				// 	}
+				// }
+				$discount_quantity += $cart['quantity'];
+				
 				$product_discount_query = $this->db->query("SELECT price FROM " . DB_PREFIX . "product_discount WHERE product_id = '" . (int)$cart['product_id'] . "' AND customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "' AND quantity <= '" . (int)$discount_quantity . "' AND ((date_start = '0000-00-00' OR date_start < NOW()) AND (date_end = '0000-00-00' OR date_end > NOW())) ORDER BY quantity DESC, priority ASC, price ASC LIMIT 1");
 
 				if ($product_discount_query->num_rows) {
